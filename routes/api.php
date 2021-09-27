@@ -19,3 +19,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('posts',[PostController::class, 'index'])->middleware('auth:sanctum');
 Route::post('login', [AuthController::class, 'login']);
 Route::delete('logout', [AuthController::class, 'logout']);
+
+Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
+Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);
