@@ -28,17 +28,17 @@ class AuthController extends Controller
     }
 
     public function redirectToProvider($provider){
-        Log::info(Socialite::driver($provider)->stateless()->redirect()->getTargetUrl());
-        return response()->json([
+        Log::info($provider);
+        /* return response()->json([
             'url' => Socialite::driver($provider)->stateless()->redirect()->getTargetUrl(),
-        ]);
+        ]); */
        
-        /* $validated  = $this->validateProvider($provider);
+        $validated  = $this->validateProvider($provider);
         if(!is_null($validated)){
             return $validated;
         }
 
-        return Socialite::driver($provider)->stateless()->redirect(); */
+        return Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
     }
 
     public function handleProviderCallback($provider){
@@ -73,9 +73,13 @@ class AuthController extends Controller
             ]
         );
 
+        $avatar = '';
+        $avatar = $user->getAvatar();
+
         $token = $userCreated->createToken('token-name')->plainTextToken;
 
-        return response()->json($userCreated,200,['Access-Token' => $token]);
+        //return response()->json($userCreated,200,['Access-Token' => $token]);
+        return view('oauth',['user' => $userCreated,'avatar' => $avatar,'token' => $token]);
     }
 
     protected function validateProvider($provider){
