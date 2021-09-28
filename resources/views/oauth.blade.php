@@ -14,7 +14,7 @@
             avatar: '{{ $avatar }}'
         },
         token:"{{ $token }}" },
-        "http://localhost:8080/login"
+        "http://localhost:8081/login"
     )
     window.close()
   </script>

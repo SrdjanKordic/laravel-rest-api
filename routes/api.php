@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,3 +22,6 @@ Route::delete('logout', [AuthController::class, 'logout']);
 
 Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
 Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);
+
+
+Route::get('users',[UserController::class,'index']);
