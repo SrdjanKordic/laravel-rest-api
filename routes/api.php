@@ -16,12 +16,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('posts',[PostController::class, 'index'])->middleware('auth:sanctum');
+/* Route::get('posts',[PostController::class, 'index'])->middleware('auth:sanctum');
 Route::post('login', [AuthController::class, 'login']);
 Route::delete('logout', [AuthController::class, 'logout']);
 
 Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
-Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);
+Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);*/
 
 
-Route::get('users',[UserController::class,'index']);
+Route::get('users',[UserController::class,'index']); 
+
+
+Route::post('login', [AuthController::class, 'authenticate']);
+Route::post('register', [AuthController::class, 'register']);
+
+Route::group(['middleware' => ['jwt.verify']], function() {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('get_user', [AuthController::class, 'get_user']);
+});
