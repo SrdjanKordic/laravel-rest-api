@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\PostController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PasswordResetRequestController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,21 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-/* Route::get('posts',[PostController::class, 'index'])->middleware('auth:sanctum');
-Route::post('login', [AuthController::class, 'login']);
-Route::delete('logout', [AuthController::class, 'logout']);
-
-Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
-Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);*/
-
-
-Route::get('users',[UserController::class,'index']); 
 
 
 Route::post('login', [AuthController::class, 'authenticate']);
+Route::post('forgot-password', [PasswordResetRequestController::class, 'sendPasswordResetEmail']);
 Route::post('register', [AuthController::class, 'register']);
+
+Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
+Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('get_user', [AuthController::class, 'get_user']);
+    Route::get('get_user', [AuthController::class, 'getUser']);
+    Route::get('users',[UserController::class,'index']);
 });

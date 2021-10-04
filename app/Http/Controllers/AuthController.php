@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMail;
 use JWTAuth;
 use App\Models\User;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
-    // Register user
+    /**
+     * Register
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param Request - User data
+     * @throws Error - If user data is invalid
+     * @return JSON -  User data
+     */
     public function register(Request $request)
     {
     	//Validate data
@@ -46,7 +53,12 @@ class AuthController extends Controller
         ], Response::HTTP_OK);
     }
 
-    // Authenticate user
+    /**
+     * Authenticate
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param Request - Username and Password to authenticate
+     * @return JSON - JWT token or Error
+     */
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -72,7 +84,7 @@ class AuthController extends Controller
                 ], 400);
             }
         } catch (JWTException $e) {
-    	return $credentials;
+    	    return $credentials;
             return response()->json([
                 	'success' => false,
                 	'message' => 'Could not create token.',
@@ -83,10 +95,16 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'token' => $token,
+            //'user' => 
         ]);
     }
 
-    // Logout user
+    /**
+     * Logout
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param Request - Token of authenticated user
+     * @return JSON - return JSON about Logout
+     */
     public function logout(Request $request)
     {
         //valid credential
@@ -115,7 +133,35 @@ class AuthController extends Controller
         }
     }
 
-    public function get_user(Request $request)
+    /**
+     * 
+     */
+    public function forgotPassword(Request $request){
+        //valid credential
+        $validator = Validator::make($request->only('email'), [
+            'email' => 'required|email'
+        ]);
+
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 200);
+        }
+
+        // Find user with that email
+        $user = User::where('email',$request->email)->get();
+
+        $token = $this->generateToken($user->email);
+        Mail::to($user->email)->send(new SendMail($token));
+
+    }
+
+    /**
+     * Get User
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param Request $request - token for authentication
+     * @return JSON User - Return Authenticated User JSON object
+     */
+    public function getUser(Request $request)
     {
         $this->validate($request, [
             'token' => 'required'
@@ -126,35 +172,27 @@ class AuthController extends Controller
         return response()->json(['user' => $user]);
     }
 
-    public function login(Request $request): Response{
-        $credentials = $request->only('email','password');
-       
-        if(Auth::attempt($credentials)){
-            return response(Auth::user(),200);
-        }
-
-        abort(401);
-    }
-
-    public function logout2(){
-        Auth::logout();
-        return response(null,200);
-    }
-
-    public function redirectToProvider($provider){
-        Log::info($provider);
-        /* return response()->json([
-            'url' => Socialite::driver($provider)->stateless()->redirect()->getTargetUrl(),
-        ]); */
-       
+    /**
+     * Redirect To Provider
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param String $provider - Provider for socialite (google,github,facebook...)
+     * @return String - returns URL of provider for login 
+     */
+    public function redirectToProvider($provider){       
         $validated  = $this->validateProvider($provider);
         if(!is_null($validated)){
             return $validated;
         }
-
         return Socialite::driver($provider)->stateless()->redirect()->getTargetUrl();
     }
 
+    /**
+     * Handle Provider Callback
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param String $provider - Provider for socialite (google,github,facebook...)
+     * @throws Error - If provider is not found or if credentials are invalid
+     * @return String $token - JWT token for authentication
+     */
     public function handleProviderCallback($provider){
         
         $validated  = $this->validateProvider($provider);
@@ -187,18 +225,23 @@ class AuthController extends Controller
             ]
         );
 
-        $avatar = '';
-        $avatar = $user->getAvatar();
-
-        $token = $userCreated->createToken('token-name')->plainTextToken;
-
-        //return response()->json($userCreated,200,['Access-Token' => $token]);
-        return view('oauth',['user' => $userCreated,'avatar' => $avatar,'token' => $token]);
+        $token = JWTAuth::fromUser($userCreated);
+        return view('oauth',['token' => $token]);
     }
 
+
+    /**
+     * Validate Provider
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param String - Provider to check
+     * @throws Error - if provider is not found throws error
+     */
     protected function validateProvider($provider){
         if(!in_array($provider,['facebook','github','google'])){
             return response()->json(['error' => 'Please login using facebook, github or google']);
         }
     }
+
+
+
 }

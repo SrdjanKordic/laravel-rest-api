@@ -4,22 +4,13 @@
   <title>{{ config('app.name') }}</title>
   <script>
     window.opener.postMessage({ 
-        user: { 
-            id: {{ $user->id }},
-            name: '{{ $user->name }}',
-            email: '{{ $user->email }}',
-            email_verified_at: '{{ $user->email_verified_at }}',
-            created_at: '{{ $user->created_at }}',
-            updated_at: '{{ $user->updated_at }}',
-            avatar: '{{ $avatar }}'
-        },
         token:"{{ $token }}" },
-        "http://localhost:8081/login"
+        "http://localhost:8080/login"
     )
-    window.close()
+   window.close()
   </script>
 </head>
 <body>
-    {{ $user->providers }}
+   
 </body>
 </html>
