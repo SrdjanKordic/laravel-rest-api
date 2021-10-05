@@ -26,11 +26,11 @@ class AuthController extends Controller
     public function register(Request $request)
     {
     	//Validate data
-        $data = $request->only('name', 'email', 'password');
+        $data = $request->only('name', 'email', 'password', 'password_confirmation');
         $validator = Validator::make($data, [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:50'
+            'password' => 'required|confirmed|string|min:6|max:50'
         ]);
 
         //Send failed response if request is not valid
@@ -134,28 +134,6 @@ class AuthController extends Controller
     }
 
     /**
-     * 
-     */
-    public function forgotPassword(Request $request){
-        //valid credential
-        $validator = Validator::make($request->only('email'), [
-            'email' => 'required|email'
-        ]);
-
-        //Send failed response if request is not valid
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
-        }
-
-        // Find user with that email
-        $user = User::where('email',$request->email)->get();
-
-        $token = $this->generateToken($user->email);
-        Mail::to($user->email)->send(new ResetPasswordMail($token));
-
-    }
-
-    /**
      * Get User
      * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param Request $request - token for authentication
@@ -170,6 +148,17 @@ class AuthController extends Controller
         $user = JWTAuth::authenticate($request->token);
  
         return response()->json(['user' => $user]);
+    }
+
+    /**
+     * Refresh Token
+     * @author Srdjan Kordic <srdjank90@gmail.com>
+     * @param Request
+     * @return JSON
+     */
+    public function refreshToken(Request $request){
+        $token = JWTAuth::refresh(JWTAuth::getToken());
+        return response()->json(['token' => $token]);
     }
 
     /**

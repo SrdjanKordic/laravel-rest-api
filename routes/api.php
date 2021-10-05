@@ -23,6 +23,7 @@ Route::post('login', [AuthController::class, 'authenticate']);
 Route::post('forgot-password', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
 Route::post('reset-password', [ChangePasswordController::class, 'passwordResetProcess']);
 Route::post('register', [AuthController::class, 'register']);
+Route::post('token/refresh', [AuthController::class, 'refreshToken']);
 
 Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
 Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCallback']);
