@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Mail\SendMail;
+use App\Http\Controllers\Controller;
+use App\Mail\ResetPasswordMail;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
-class PasswordResetRequestController extends Controller
+class ForgotPasswordController extends Controller
 {
     public function sendPasswordResetEmail(Request $request){
         // If email does not exist
@@ -31,7 +32,7 @@ class PasswordResetRequestController extends Controller
 
     public function sendMail($email){
         $token = $this->generateToken($email);
-        Mail::to($email)->send(new SendMail($token));
+        Mail::to($email)->send(new ResetPasswordMail($token));
     }
 
     public function validEmail($email) {

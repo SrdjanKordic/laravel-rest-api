@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Mail\SendMail;
+use App\Http\Controllers\Controller;
+use App\Mail\ResetPasswordMail;
 use JWTAuth;
 use App\Models\User;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
@@ -151,7 +151,7 @@ class AuthController extends Controller
         $user = User::where('email',$request->email)->get();
 
         $token = $this->generateToken($user->email);
-        Mail::to($user->email)->send(new SendMail($token));
+        Mail::to($user->email)->send(new ResetPasswordMail($token));
 
     }
 

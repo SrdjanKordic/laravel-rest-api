@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PasswordResetRequestController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('login', [AuthController::class, 'authenticate']);
-Route::post('forgot-password', [PasswordResetRequestController::class, 'sendPasswordResetEmail']);
+Route::post('forgot-password', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
 Route::post('register', [AuthController::class, 'register']);
 
 Route::get('login/{provider}',[AuthController::class, 'redirectToProvider']);
