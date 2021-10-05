@@ -6,6 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
+
+//use Tymon\JWTAuth\Middleware\GetUserFromToken;
 
 class SendMail extends Mailable
 {
@@ -28,6 +31,7 @@ class SendMail extends Mailable
      */
     public function build()
     {
+        Log::info("Email message");
         return $this->markdown('Email.resetPassword')->with([
             'token' => $this->token
         ]);
