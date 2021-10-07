@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -47,7 +49,8 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::find($id);
+        return response()->json($user, 200);
     }
 
     /**
@@ -70,7 +73,21 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->only('name', 'sex','dob','country','state','city','address','phone');
+
+        $validator = Validator::make($data, [
+            'name' => 'required|string',
+        ]);
+
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->messages()], 422);
+        }
+
+        $user = User::find($id);
+        $user->update($request->all());
+        
+        return response()->json($user, 200);
     }
 
     /**

@@ -31,5 +31,8 @@ Route::get('login/{provider}/callback',[AuthController::class, 'handleProviderCa
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::get('get_user', [AuthController::class, 'getUser']);
+    // User routes
     Route::get('users',[UserController::class,'index']);
+    Route::get('user/{id}',[UserController::class, 'show']);
+    Route::put('user/{id}',[UserController::class, 'update']);
 });
