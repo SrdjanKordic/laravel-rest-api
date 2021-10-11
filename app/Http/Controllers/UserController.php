@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -16,6 +17,10 @@ class UserController extends Controller
      */
     public function index()
     {
+        if (! Gate::allows('user-access')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'user-access'], 403);
+        }
+
         $users = User::all();
         return $users;
     }
@@ -73,6 +78,10 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (! Gate::allows('user-update')) {
+            return response()->json(['message' => "You don't have permissions to update user",'permission' => 'user-update'], 403);
+        }
+
         $data = $request->only('name', 'sex','dob','country','state','city','address','phone');
 
         $validator = Validator::make($data, [

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +17,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+route::get('users', function(){
+    $users = User::findOrFail(1);
+    return $users->role->permissions;
 });
