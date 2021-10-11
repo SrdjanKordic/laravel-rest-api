@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 
 
 Route::post('login', [AuthController::class, 'authenticate']);
@@ -35,4 +35,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('users',[UserController::class,'index']);
     Route::get('user/{id}',[UserController::class, 'show']);
     Route::put('user/{id}',[UserController::class, 'update']);
+    // Role routes
+    Route::get('roles',[RoleController::class,'index']);
+    Route::post('role',[RoleController::class,'store']);
+    Route::get('role/{id}',[RoleController::class, 'show']);
+    Route::put('role/{id}',[RoleController::class, 'update']);
 });
