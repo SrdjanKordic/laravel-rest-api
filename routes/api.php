@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RoleController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,9 +36,13 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('users',[UserController::class,'index']);
     Route::get('user/{id}',[UserController::class, 'show']);
     Route::put('user/{id}',[UserController::class, 'update']);
+    Route::delete('user/{id}',[UserController::class, 'destroy']);
     // Role routes
     Route::get('roles',[RoleController::class,'index']);
     Route::post('role',[RoleController::class,'store']);
     Route::get('role/{id}',[RoleController::class, 'show']);
     Route::put('role/{id}',[RoleController::class, 'update']);
+    Route::delete('role/{id}',[RoleController::class, 'destroy']);
+    // Permissions
+    Route::get('permissions',[PermissionController::class,'index']);
 });

@@ -21,7 +21,7 @@ class UserController extends Controller
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'user-access'], 403);
         }
 
-        $users = User::all();
+        $users = User::with('role')->get();
         return $users;
     }
 
@@ -107,6 +107,8 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+        return response()->json($user, 200);
     }
 }
