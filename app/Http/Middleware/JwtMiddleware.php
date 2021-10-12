@@ -27,6 +27,7 @@ class JwtMiddleware extends BaseMiddleware
         try {
             $user = JWTAuth::parseToken()->authenticate();
             $userPermissions = [];
+            
             if($user->permissions){
                 $userPermissions = [];
                 $userPermissions = array_map('intval', explode(',', $user->permissions));
