@@ -17,8 +17,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('user-access')) {
-            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'user-access'], 403);
+        if (! Gate::allows('USER_ACCESS')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
 
         $users = User::with('role')->get();
@@ -78,8 +78,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (! Gate::allows('user-update')) {
-            return response()->json(['message' => "You don't have permissions to update user",'permission' => 'user-update'], 403);
+        if (! Gate::allows('USER_UPDATE')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_UPDATE'], 403);
         }
 
         $data = $request->only('name', 'sex','dob','country','state','city','address','phone');
@@ -107,6 +107,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
+        if (! Gate::allows('USER_DELETE')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_DELETE'], 403);
+        }
         $user = User::findOrFail($id);
         $user->delete();
         return response()->json($user, 200);

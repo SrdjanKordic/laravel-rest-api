@@ -16,43 +16,43 @@ class PermissionSeeder extends Seeder
     {
         $permissionsArray = array(
             [
-                'name' => 'user-access',
+                'name' => 'USER_ACCESS',
                 'description' => 'Access to users page'
             ],
             [
-                'name' => 'user-create',
+                'name' => 'USER_CREATE',
                 'description' => 'Create new users'
             ],
             [
-                'name' => 'user-update',
+                'name' => 'USER_UPDATE',
                 'description' => 'Update users data'
             ],
             [
-                'name' => 'user-delete',
+                'name' => 'USER_DELETE',
                 'description' => 'Remove users'
             ],
             [
-                'name' => 'settings-general-access',
+                'name' => 'SETTINGS_GENERAL_ACCESS',
                 'description' => 'Access to general settings'
             ],
             [
-                'name' => 'settings-general-update',
+                'name' => 'SETTINGS_GENERAL_UPDATE',
                 'description' => 'Update general settings'
             ],
             [
-                'name' => 'role-access',
+                'name' => 'ROLE_ACCESS',
                 'description' => 'Access to roles in settings page'
             ],
             [
-                'name' => 'role-create',
+                'name' => 'ROLE_CREATE',
                 'description' => 'Create new role'
             ],
             [
-                'name' => 'role-update',
+                'name' => 'ROLE_UPDATE',
                 'description' => 'Update existing role'
             ],
             [
-                'name' => 'role-delete',
+                'name' => 'ROLE_DELETE',
                 'description' => 'Remove role'
             ],
         );
