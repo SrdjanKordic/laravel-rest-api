@@ -45,4 +45,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::delete('role/{id}',[RoleController::class, 'destroy']);
     // Permissions
     Route::get('permissions',[PermissionController::class,'index']);
+    Route::post('permissions/ids',[PermissionController::class,'permissionIdsFromNames']);
+    Route::post('permissions/names',[PermissionController::class,'permissionNamesFromIds']);
 });

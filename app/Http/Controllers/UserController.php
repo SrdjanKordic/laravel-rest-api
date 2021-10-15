@@ -94,6 +94,7 @@ class UserController extends Controller
         }
 
         $user = User::find($id);
+        Log::info($request->permissions);
         $user->update($request->all());
         
         return response()->json($user, 200);
