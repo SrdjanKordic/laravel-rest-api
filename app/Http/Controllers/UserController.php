@@ -82,7 +82,7 @@ class UserController extends Controller
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_UPDATE'], 403);
         }
 
-        $data = $request->only('name', 'sex','dob','country','state','city','address','phone');
+        $data = $request->only('name', 'sex','dob','country','state','city','address','phone','instagram','facebook','twitter','linkedin','github','youtube');
 
         $validator = Validator::make($data, [
             'name' => 'required|string',

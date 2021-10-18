@@ -32,7 +32,13 @@ class User extends Authenticatable implements JWTSubject
         'about',
         'avatar',
         'role_id',
-        'permissions'
+        'permissions',
+        'instagram',
+        'facebook',
+        'twitter',
+        'linkedin',
+        'github',
+        'youtube'
     ];
 
     /**
