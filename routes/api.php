@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Route::post('login', [AuthController::class, 'authenticate']);
 Route::post('forgot-password', [ForgotPasswordController::class, 'sendPasswordResetEmail']);
 Route::post('reset-password', [ChangePasswordController::class, 'passwordResetProcess']);
@@ -37,6 +36,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('user/{id}',[UserController::class, 'show']);
     Route::put('user/{id}',[UserController::class, 'update']);
     Route::delete('user/{id}',[UserController::class, 'destroy']);
+    Route::post('user/change-password',[UserController::class, 'changePassword']);
     // Role routes
     Route::get('roles',[RoleController::class,'index']);
     Route::post('role',[RoleController::class,'store']);

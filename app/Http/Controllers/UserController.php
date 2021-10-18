@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -114,5 +115,21 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return response()->json($user, 200);
+    }
+
+    /**
+     * Change password
+     * @param $request
+     * @return \Illuminate\Http\Response
+     */
+    public function changePassword(Request $request){
+        $request->validate([
+            'current_password' => ['required', 'current_password' ],
+            'new_password' => ['required','min:6'],
+            'new_confirm_password' => ['same:new_password'],
+        ]);
+
+        User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
+        return response()->json('',200);
     }
 }
