@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Image;
 
 class UserController extends Controller
 {
@@ -96,9 +97,7 @@ class UserController extends Controller
         }
 
         $user = User::find($id);
-        Log::info($request->permissions);
         $user->update($request->all());
-        
         return response()->json($user, 200);
     }
 
@@ -134,34 +133,37 @@ class UserController extends Controller
         return response()->json('',200);
     }
 
-
+    /**
+     * Upload Avatar
+     * @param $request
+     * @return \Illuminate\Http\Response
+     */
     public function uploadAvatar(Request $request){
         $validator = Validator::make($request->all(),[ 
             'avatar' => 'required|image|max:2048',
         ]);
-        
+
         //Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
 
         $user = User::findOrFail($request->id);
-        Log::info($user->avatar);
-        Log::info(Storage::disk('public')->exists('/uploads/avatars/1-616e94fce2505-avatar-name.jpg'));
         if(Storage::disk('public')->exists($user->avatar)){
-            Log::alert("STORAGE EXISTS");
             Storage::disk('public')->delete($user->avatar);
-            /*
-                Delete Multiple File like this way
-                Storage::delete(['upload/test.png', 'upload/test2.png']);
-            */
         }
+
+        $img = Image::make($request->file('avatar')->getRealPath());
+
 
         $file = $request->file('avatar');
         $name = '/uploads/avatars/' . $request->id . '-' .uniqid() . '-avatar-name.' . $file->extension();
         $file->storePubliclyAs('public', $name);
 
-        //store your file into database
+        Image::make(storage_path('app/public/' . $name))
+        ->fit(150, 150)
+        ->save(storage_path('app/public/' . $name));
+
         
         $user->avatar = $name;
         $user->save();
