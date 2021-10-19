@@ -37,6 +37,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('user/{id}',[UserController::class, 'update']);
     Route::delete('user/{id}',[UserController::class, 'destroy']);
     Route::post('user/change-password',[UserController::class, 'changePassword']);
+    Route::post('user/avatar',[UserController::class,'uploadAvatar']);
     // Role routes
     Route::get('roles',[RoleController::class,'index']);
     Route::post('role',[RoleController::class,'store']);

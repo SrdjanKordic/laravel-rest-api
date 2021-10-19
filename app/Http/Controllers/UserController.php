@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -91,7 +92,7 @@ class UserController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 422);
+            return response()->json(['error' => $validator->errors()], 422);
         }
 
         $user = User::find($id);
@@ -131,5 +132,40 @@ class UserController extends Controller
 
         User::find(auth()->user()->id)->update(['password'=> Hash::make($request->new_password)]);
         return response()->json('',200);
+    }
+
+
+    public function uploadAvatar(Request $request){
+        $validator = Validator::make($request->all(),[ 
+            'avatar' => 'required|image|max:2048',
+        ]);
+        
+        //Send failed response if request is not valid
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $user = User::findOrFail($request->id);
+        Log::info($user->avatar);
+        Log::info(Storage::disk('public')->exists('/uploads/avatars/1-616e94fce2505-avatar-name.jpg'));
+        if(Storage::disk('public')->exists($user->avatar)){
+            Log::alert("STORAGE EXISTS");
+            Storage::disk('public')->delete($user->avatar);
+            /*
+                Delete Multiple File like this way
+                Storage::delete(['upload/test.png', 'upload/test2.png']);
+            */
+        }
+
+        $file = $request->file('avatar');
+        $name = '/uploads/avatars/' . $request->id . '-' .uniqid() . '-avatar-name.' . $file->extension();
+        $file->storePubliclyAs('public', $name);
+
+        //store your file into database
+        
+        $user->avatar = $name;
+        $user->save();
+            
+        return response()->json($name, 200);
     }
 }
