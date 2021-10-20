@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 422);
+            return response()->json(['error' => $validator->errors()], 422);
         }
 
         //Request is valid, create new user
@@ -72,7 +72,7 @@ class AuthController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 422);
+            return response()->json(['error' => $validator->errors()], 422);
         }
 
         //Request is validated
@@ -115,7 +115,7 @@ class AuthController extends Controller
 
         //Send failed response if request is not valid
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->messages()], 200);
+            return response()->json(['error' => $validator->errors()], 200);
         }
 
 		//Request is validated, do logout        
