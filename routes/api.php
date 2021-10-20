@@ -5,7 +5,9 @@ use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\RoleController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserActivityController;
 use App\Http\Controllers\UserController;
+use App\Models\UserActivity;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -49,4 +51,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('permissions',[PermissionController::class,'index']);
     Route::post('permissions/ids',[PermissionController::class,'permissionIdsFromNames']);
     Route::post('permissions/names',[PermissionController::class,'permissionNamesFromIds']);
+    // User logs
+    Route::get('logs',[UserActivityController::class,'index']);
+    Route::post('log',[UserActivityController::class, 'store']);
 });
