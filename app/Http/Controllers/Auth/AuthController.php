@@ -18,7 +18,6 @@ class AuthController extends Controller
 {
     /**
      * Register
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param Request - User data
      * @throws Error - If user data is invalid
      * @return JSON -  User data
@@ -51,12 +50,11 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'User created successfully',
             'data' => $user
-        ], Response::HTTP_OK);
+        ], 200);
     }
 
     /**
      * Authenticate
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param Request - Username and Password to authenticate
      * @return JSON - JWT token or Error
      */
@@ -102,7 +100,6 @@ class AuthController extends Controller
 
     /**
      * Logout
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param Request - Token of authenticated user
      * @return JSON - return JSON about Logout
      */
@@ -136,7 +133,6 @@ class AuthController extends Controller
 
     /**
      * Get User
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param Request $request - token for authentication
      * @return JSON User - Return Authenticated User JSON object
      */
@@ -153,7 +149,6 @@ class AuthController extends Controller
 
     /**
      * Refresh Token
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param Request
      * @return JSON
      */
@@ -164,7 +159,6 @@ class AuthController extends Controller
 
     /**
      * Redirect To Provider
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param String $provider - Provider for socialite (google,github,facebook...)
      * @return String - returns URL of provider for login 
      */
@@ -178,7 +172,6 @@ class AuthController extends Controller
 
     /**
      * Handle Provider Callback
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param String $provider - Provider for socialite (google,github,facebook...)
      * @throws Error - If provider is not found or if credentials are invalid
      * @return String $token - JWT token for authentication
@@ -222,7 +215,6 @@ class AuthController extends Controller
 
     /**
      * Validate Provider
-     * @author Srdjan Kordic <srdjank90@gmail.com>
      * @param String - Provider to check
      * @throws Error - if provider is not found throws error
      */
