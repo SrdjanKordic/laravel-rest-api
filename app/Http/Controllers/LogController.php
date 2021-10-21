@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserActivity;
+use App\Models\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
-class UserActivityController extends Controller
+class LogController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +16,11 @@ class UserActivityController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('USER_ACCESS')) {
+        if (! Gate::allows('LOGS_ACCESS')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
 
-        $logs = UserActivity::all();
+        $logs = Log::all();
         return $logs;
     }
 
@@ -50,7 +50,8 @@ class UserActivityController extends Controller
             'description' => 'required|string',
             'subject_type' => 'required|string',
             'subject_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            'causer_type' => 'required|string',
+            'causer_id' => 'required|integer',
         ]);
 
         //Send failed response if request is not valid
@@ -59,7 +60,7 @@ class UserActivityController extends Controller
         }
 
         //Request is valid, create new user
-        $userActivity = UserActivity::create($request->all());
+        $log = Log::create($request->all());
 
     }
 

@@ -55,6 +55,10 @@ class PermissionSeeder extends Seeder
                 'name' => 'ROLE_DELETE',
                 'description' => 'Remove role'
             ],
+            [
+                'name' => 'LOGS_ACCESS',
+                'description' => 'Access to logs'
+            ],
         );
 
         DB::table('permissions')->truncate();
