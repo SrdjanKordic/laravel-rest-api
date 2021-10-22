@@ -19,8 +19,7 @@ class LogController extends Controller
         if (! Gate::allows('LOGS_ACCESS')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
-
-        $logs = Log::all();
+        $logs = Log::orderBy('created_at','DESC')->get();
         return $logs;
     }
 

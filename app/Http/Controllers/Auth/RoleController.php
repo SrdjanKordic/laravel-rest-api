@@ -74,11 +74,7 @@ class RoleController extends Controller
         $role->save();
 
         //User created, return success response
-        return response()->json([
-            'success' => true,
-            'message' => 'Role created successfully',
-            'data' => $role
-        ], Response::HTTP_OK);
+        return response()->json($role, 200);
     }
 
     /**

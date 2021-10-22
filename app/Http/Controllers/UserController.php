@@ -73,11 +73,7 @@ class UserController extends Controller
         ]);
 
         //User created, return success response
-        return response()->json([
-            'success' => true,
-            'message' => 'User created successfully',
-            'data' => $user
-        ], 200);
+        return response()->json($user, 200);
     }
 
     /**
