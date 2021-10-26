@@ -20,13 +20,13 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (! Gate::allows('USER_ACCESS')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
 
-        $users = User::with('role')->get();
+        $users = User::with('role')->paginate(2);
         return $users;
     }
 
@@ -37,7 +37,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        // 
     }
 
     /**
@@ -51,7 +51,7 @@ class UserController extends Controller
         if (! Gate::allows('USER_CREATE')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_CREATE'], 403);
         }
-        //Validate data
+        // Validate data
         $data = $request->only('name', 'email', 'password', 'password_confirmation');
         $validator = Validator::make($data, [
             'name' => 'required|string',
@@ -59,12 +59,12 @@ class UserController extends Controller
             'password' => 'required|confirmed|string|min:6|max:50'
         ]);
 
-        //Send failed response if request is not valid
+        // Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        //Request is valid, create new user
+        // Request is valid, create new user
         $user = User::create([
         	'name' => $request->name,
         	'email' => $request->email,
@@ -72,7 +72,7 @@ class UserController extends Controller
             'role_id' => 2
         ]);
 
-        //User created, return success response
+        // User created, return success response
         return response()->json($user, 200);
     }
 
