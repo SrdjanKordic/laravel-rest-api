@@ -26,13 +26,27 @@ class UserController extends Controller
         if (! Gate::allows('USER_ACCESS')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
+        // Search parameter
+        $search = $request->input('search');
+        $role = intval($request->input('role_id'));
+        $orderBy = $request->input('orderBy') ? $request->input('orderBy') : 'id';
+        $direction = $request->input('direction') ? $request->input('direction') : 'asc';
+
         Log::info($request);
+        
+        DB::enableQueryLog();
         $users = User::with('role')
-                ->where('name', 'LIKE', '%'.$search.'%')
-                ->when($request->search && $request->search !== '', function ($query,$request) {
-                    $query->where('name', 'LIKE', '%'.$request->search.'%');
+                ->when($role, function ($query,$role) {
+                    $query->where('role_id', $role);
                 })
-                ->paginate(1);
+                ->when($search, function ($query,$search) {
+                    $query->where('name', 'LIKE', '%'.$search.'%');
+                    $query->orWhere('email', 'LIKE', '%'.$search.'%');
+                    $query->orWhere('phone', 'LIKE', '%'.$search.'%');
+                })
+                ->orderBy($orderBy, $direction)
+                ->paginate(3);
+        Log::info(DB::getQueryLog());
         return $users;
     }
 
