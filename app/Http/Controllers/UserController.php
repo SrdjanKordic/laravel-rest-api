@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -25,8 +26,13 @@ class UserController extends Controller
         if (! Gate::allows('USER_ACCESS')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
-
-        $users = User::with('role')->paginate(2);
+        Log::info($request);
+        $users = User::with('role')
+                ->where('name', 'LIKE', '%'.$search.'%')
+                ->when($request->search && $request->search !== '', function ($query,$request) {
+                    $query->where('name', 'LIKE', '%'.$request->search.'%');
+                })
+                ->paginate(1);
         return $users;
     }
 
