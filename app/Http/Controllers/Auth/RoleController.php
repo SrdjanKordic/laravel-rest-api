@@ -20,8 +20,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        if (! Gate::allows('role-access')) {
-            return response()->json(['message' => "You don't have permission",'permission' => 'role-access'], 403);
+        if (! Gate::allows('ROLE_ACCESS')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'ROLE_ACCESS'], 403);
         }
 
         $users = Role::with('permissions')->get();
@@ -46,8 +46,8 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if (! Gate::allows('role-create')) {
-            return response()->json(['message' => "You don't have permission",'permission' => 'role-create'], 403);
+        if (! Gate::allows('ROLE_CREATE')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'ROLE_CREATE'], 403);
         }
         //Validate data
         $data = $request->only('name');
@@ -74,11 +74,7 @@ class RoleController extends Controller
         $role->save();
 
         //User created, return success response
-        return response()->json([
-            'success' => true,
-            'message' => 'Role created successfully',
-            'data' => $role
-        ], Response::HTTP_OK);
+        return response()->json($role, 200);
     }
 
     /**
@@ -113,8 +109,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (! Gate::allows('role-update')) {
-            return response()->json(['message' => "You don't have permission",'permission' => 'role-update'], 403);
+        if (! Gate::allows('ROLE_UPDATE')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'ROLE_UPDATE'], 403);
         }
 
         $data = $request->only('name');
@@ -145,12 +141,14 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        if (! Gate::allows('role-delete')) {
-            return response()->json(['message' => "You don't have permission",'permission' => 'role-update'], 403);
+        if (! Gate::allows('ROLE_DELETE')) {
+            return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'ROLE_DELETE'], 403);
         }
 
         $role = Role::find($id);
         $role->delete();
         return response()->json($role, 200);
     }
+
+    
 }

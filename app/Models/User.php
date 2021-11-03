@@ -32,7 +32,13 @@ class User extends Authenticatable implements JWTSubject
         'about',
         'avatar',
         'role_id',
-        'permissions'
+        'permissions',
+        'instagram',
+        'facebook',
+        'twitter',
+        'linkedin',
+        'github',
+        'youtube'
     ];
 
     /**
@@ -65,7 +71,8 @@ class User extends Authenticatable implements JWTSubject
             'name' => $this->name,
             'email' => $this->email,
             'dob' => $this->dob,
-            'avatar' => $this->avatar
+            'avatar' => $this->avatar,
+            'permissions' =>$this->permissions ? $this->getPermissionsNames(array_map('intval', explode(',', $this->permissions))) : array_column(json_decode(json_encode($this->role->permissions), true), 'name')
         ];
     }
 
@@ -75,5 +82,13 @@ class User extends Authenticatable implements JWTSubject
 
     public function role(){
         return $this->belongsTo(Role::class);
+    }
+
+    public function getPermissionsNames($idsArray){
+        return Permission::whereIn('id',$idsArray)->get()->pluck('name');
+    }
+
+    public function logs(){
+        return $this->hasMany(Log::class,'causer_id', 'id');
     }
 }

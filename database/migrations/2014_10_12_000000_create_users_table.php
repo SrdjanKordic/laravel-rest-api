@@ -27,6 +27,12 @@ class CreateUsersTable extends Migration
             $table->string('avatar')->nullable();
             $table->string('status')->nullable();
             $table->string('email')->unique();
+            $table->string('instagram')->nullable();
+            $table->string('facebook')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->string('github')->nullable();
+            $table->string('youtube')->nullable();
             $table->integer('role_id')->nullable();
             $table->text('permissions')->nullable();
             $table->timestamp('email_verified_at')->nullable();
