@@ -14,12 +14,14 @@ class LogController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (! Gate::allows('LOGS_ACCESS')) {
             return response()->json(['message' => "You don't have permissions to access this route",'permission' => 'USER_ACCESS'], 403);
         }
-        $logs = Log::with('user')->orderBy('created_at','DESC')->get();
+        $orderBy = $request->input('orderBy') ? $request->input('orderBy') : 'id';
+        $direction = $request->input('direction') ? $request->input('direction') : 'asc';
+        $logs = Log::with('user')->orderBy($orderBy,$direction)->paginate(10);
         return $logs;
     }
 

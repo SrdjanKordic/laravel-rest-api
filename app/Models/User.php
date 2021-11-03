@@ -87,4 +87,8 @@ class User extends Authenticatable implements JWTSubject
     public function getPermissionsNames($idsArray){
         return Permission::whereIn('id',$idsArray)->get()->pluck('name');
     }
+
+    public function logs(){
+        return $this->hasMany(Log::class,'causer_id', 'id');
+    }
 }

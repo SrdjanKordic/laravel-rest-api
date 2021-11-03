@@ -31,10 +31,8 @@ class UserController extends Controller
         $role = intval($request->input('role_id'));
         $orderBy = $request->input('orderBy') ? $request->input('orderBy') : 'id';
         $direction = $request->input('direction') ? $request->input('direction') : 'asc';
-
-        Log::info($request);
         
-        DB::enableQueryLog();
+        //DB::enableQueryLog();
         $users = User::with('role')
                 ->when($role, function ($query,$role) {
                     $query->where('role_id', $role);
@@ -46,7 +44,7 @@ class UserController extends Controller
                 })
                 ->orderBy($orderBy, $direction)
                 ->paginate(3);
-        Log::info(DB::getQueryLog());
+        //Log::info(DB::getQueryLog());
         return $users;
     }
 
